@@ -170,6 +170,41 @@ int SortList(NODE **head){
 	}while( flag );
 	return 0;
 }
+int ReverseList(NODE **head){
+	NODE * tmp,*tmp1,*tmp3;
+	/*前驱节点*/
+	tmp = *head;
+	/*后驱节点*/
+	tmp1 = (*head)->next;
+	/*临时变量节点*/
+	
+	if ( tmp == NULL || tmp1 == NULL )
+	{
+		return -1;
+	}
+	while(tmp1 != NULL)
+	{
+		/*如果是最后一个节点将其变为头节点，原本头节点的next置为null*/
+		if ( tmp1->next == NULL )
+		{
+			(*head)->next=NULL;
+			*head=tmp1;
+			(*head)->next = tmp;
+			break;
+		}
+		/*后驱节点的next指针保存在tmp3中*/
+		tmp3 = tmp1->next;
+		/*将next指向前驱*/
+		tmp1->next = tmp;
+		/*保存前驱节点*/
+		tmp = tmp1;
+		/*移动指针tmp1*/
+		tmp1 = tmp3;
+	}
+	
+	return 0;
+}
+
 int ListMerge(NODE *head1,NODE *head2){
 	if ( head1 == NULL || head2 == NULL )
 	{
