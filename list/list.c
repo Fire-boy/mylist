@@ -108,24 +108,35 @@ int SortList(NODE **head){
 	}
 	NODE *ptmp=*head;
 	NODE *ptmp1=*head;
+
+	/*ptmp1后驱节点*/
 	NODE *ptmp2=(*head)->next;
+	/*ptmp1前驱节点*/
 	NODE *ptmp3;
 	do{
 
-		ptmp3=ptmp1=ptmp;
+		ptmp1=ptmp;
+		ptmp2=ptmp1->next;
+		/*最后一个节点不必比较*/
+		if ( ptmp2 == NULL )
+		{
+			break;
+		}
+		ptmp3=ptmp1;
 		flag=0;
 		while ( ptmp1 != NULL ){
 			
 			printf("ptmp1->data=%d ptmp2->data=%d ptmp1->next->data =%d \n",ptmp1->data,ptmp2->data,ptmp1->next->data);
 			if ( ptmp1->data < ptmp2->data )
 			{
-				/*如果过要交换头节点单独处理他的前驱节点，即没有前驱节点*/
+				/*单独处理头节点没有前驱节点的情况*/
 				if ( ptmp1 == *head )
 				{
 					ptmp1->next = ptmp2->next;
 					ptmp2->next = ptmp1;
 					(*head)=ptmp2;
 					ptmp=*head;
+					ptmp3=ptmp2;
 				}
 				else
 				{
