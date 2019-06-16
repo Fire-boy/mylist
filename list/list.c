@@ -1,0 +1,221 @@
+#include "list.h"
+#include <stdio.h>
+#include <string.h>
+
+void * mymalloc(int x){
+	void * ptr = malloc(x);
+	return ptr;
+}
+
+int ListNode(NODE **node){
+	*node = (NODE *) mymalloc(sizeof(NODE));	
+	if ( *node != NULL )
+	{
+		(*node)->next=NULL;
+		return 0;
+	}
+	else
+	{
+		return -1;
+	}
+}
+int Listisempty(NODE *head){
+	if ( head == NULL )
+	{
+		return -1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+int PreInsertList(NODE **head,idata value){
+	if ( head == NULL )
+	{
+		return -1;
+	}
+	NODE *ptmp;
+	ptmp = (NODE *) mymalloc(sizeof(NODE));
+	if ( ptmp == NULL )
+	{
+		return -1;
+	}
+	ptmp->next = *head;
+	ptmp->data = value;
+	*head = ptmp;
+	return 0;
+}
+
+int TaiInsertList(NODE **head,idata value){
+	if ( *head == NULL )
+	{
+		return -1;
+	}
+	NODE *ptmp;
+	ptmp = (NODE *) mymalloc(sizeof(NODE));
+	if ( ptmp == NULL )
+	{
+		return -1;
+	}
+	ptmp->next = (*head)->next;
+	ptmp->data = value;
+	(*head)->next = ptmp;
+	return 0;
+}
+
+int DelListNode(NODE *head,idata value){
+	if ( head == NULL )
+	{
+		return -1;
+	}
+	/*判断边界条件删除头节点*/
+	
+	NODE *ptmp=head;
+	if ( ptmp->data == value )
+	{
+		head = ptmp->next;
+		free(ptmp);
+		return 0;
+	}
+	NODE *ptmp1 = ptmp;
+	while ( ptmp != NULL )
+	{	
+		
+		if ( ptmp->data == value )
+		{
+			ptmp1->next = ptmp->next;
+			ptmp->next = NULL;
+			free(ptmp);
+			break;
+		}
+
+		ptmp = ptmp->next;
+		
+		if ( ptmp == NULL )
+		{
+			return -1;
+		}
+		ptmp1 = ptmp;
+		
+	}
+	return 0;
+}
+int SortList(NODE **head){
+	int flag=1;
+	if ( *head == NULL || (*head)->next == NULL )
+	{
+		return -1;
+	}
+	NODE *ptmp=*head;
+	NODE *ptmp1=*head;
+	NODE *ptmp2=(*head)->next;
+	NODE *ptmp3;
+	do{
+
+		ptmp3=ptmp1=ptmp;
+		flag=0;
+		while ( ptmp1 != NULL ){
+			
+			printf("ptmp1->data=%d ptmp2->data=%d ptmp1->next->data =%d \n",ptmp1->data,ptmp2->data,ptmp1->next->data);
+			if ( ptmp1->data < ptmp2->data )
+			{
+				/*如果过要交换头节点单独处理他的前驱节点，即没有前驱节点*/
+				if ( ptmp1 == *head )
+				{
+					ptmp1->next = ptmp2->next;
+					ptmp2->next = ptmp1;
+					(*head)=ptmp2;
+					ptmp=*head;
+				}
+				else
+				{
+					
+					ptmp1->next = ptmp2->next;
+					ptmp2->next = ptmp1;
+					ptmp3->next = ptmp2; 
+					ptmp3=ptmp2;
+					
+				}
+				flag=1;
+				if ( ptmp1 == NULL || ptmp1->next == NULL )
+				{
+					break;
+				}
+				ptmp2=ptmp1->next;
+			}
+			else
+			{
+				ptmp3 = ptmp1;
+				ptmp1 = ptmp1->next;
+				if ( ptmp1 == NULL || ptmp1->next == NULL)
+				{
+					printf("ptmp1->data=%d ptmp2->data=%d\n",ptmp1->data,ptmp2->data);
+					break;
+				}
+				ptmp2=ptmp1->next;
+			}
+		}
+
+	}while( flag );
+	return 0;
+}
+int ListMerge(NODE *head1,NODE *head2){
+	if ( head1 == NULL || head2 == NULL )
+	{
+		return -1;
+	}
+	NODE *tmp=head1;
+	while( tmp->next != NULL )
+	{
+		tmp = tmp->next;
+	}
+	tmp->next=head2;
+	return 0;
+}
+int ShowList(NODE *head2){
+	printf("step into %s \n",__func__);
+	if ( head2 == NULL )
+	{
+		return -1;
+	}
+	NODE *tmp=head2;
+	while ( tmp!=NULL )
+	{
+		printf("%d ",tmp->data);
+		tmp=tmp->next;
+	}
+	printf("\n");
+	return 0;
+}
+int FindNode(NODE *head2,idata value){
+	if ( head2 == NULL )
+	{
+		return -1;
+	}
+	NODE *tmp=head2;
+	while ( tmp != NULL )
+	{
+		if ( tmp->data ==  value)
+		{
+			break;
+		}
+		tmp=tmp->next;
+	}
+}
+int DestroyList(NODE *head){
+	if ( head == NULL )
+	{
+		return -1;
+	}
+	NODE *tmp=(NODE *)mymalloc(sizeof(NODE));
+	while ( head != NULL )
+	{	
+		printf("free %d ",head->data);
+		memcpy((char *)tmp,(char *)head,sizeof(NODE));
+		free(head);
+		head->next = NULL;
+		head = tmp->next;
+	}
+	printf("\n");
+	return 0;
+}
