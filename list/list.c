@@ -1,14 +1,21 @@
 #include "list.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-void * mymalloc(int x){
+void * mymalloc(size_t x){
 	void * ptr = malloc(x);
+	printf("alloc %p \n",ptr);
 	return ptr;
+}
+void myfree(void *ptr)
+{
+	printf("free %p \n",ptr);
 }
 
 int ListNode(NODE **node){
 	*node = (NODE *) mymalloc(sizeof(NODE));	
+	
 	if ( *node != NULL )
 	{
 		(*node)->next=NULL;
@@ -63,39 +70,38 @@ int TaiInsertList(NODE **head,idata value){
 	return 0;
 }
 
-int DelListNode(NODE *head,idata value){
+int DelListNode(NODE **head,idata value){
 	if ( head == NULL )
 	{
 		return -1;
 	}
 	/*判断边界条件删除头节点*/
 	
-	NODE *ptmp=head;
+	NODE *ptmp=*head;
 	if ( ptmp->data == value )
 	{
-		head = ptmp->next;
-		free(ptmp);
+		*head = ptmp->next;
+		myfree(ptmp);
 		return 0;
 	}
+	/*保存前驱节点*/
 	NODE *ptmp1 = ptmp;
+	
 	while ( ptmp != NULL )
 	{	
-		
 		if ( ptmp->data == value )
 		{
 			ptmp1->next = ptmp->next;
 			ptmp->next = NULL;
-			free(ptmp);
+			myfree(ptmp);
 			break;
 		}
-
+		ptmp1 = ptmp;
 		ptmp = ptmp->next;
-		
 		if ( ptmp == NULL )
 		{
 			return -1;
 		}
-		ptmp1 = ptmp;
 		
 	}
 	return 0;
@@ -126,7 +132,7 @@ int SortList(NODE **head){
 		flag=0;
 		while ( ptmp1 != NULL ){
 			
-			printf("ptmp1->data=%d ptmp2->data=%d ptmp1->next->data =%d \n",ptmp1->data,ptmp2->data,ptmp1->next->data);
+			//printf("ptmp1->data=%d ptmp2->data=%d ptmp1->next->data =%d \n",ptmp1->data,ptmp2->data,ptmp1->next->data);
 			if ( ptmp1->data < ptmp2->data )
 			{
 				/*单独处理头节点没有前驱节点的情况*/
@@ -160,7 +166,7 @@ int SortList(NODE **head){
 				ptmp1 = ptmp1->next;
 				if ( ptmp1 == NULL || ptmp1->next == NULL)
 				{
-					printf("ptmp1->data=%d ptmp2->data=%d\n",ptmp1->data,ptmp2->data);
+					//printf("ptmp1->data=%d ptmp2->data=%d\n",ptmp1->data,ptmp2->data);
 					break;
 				}
 				ptmp2=ptmp1->next;
@@ -256,12 +262,13 @@ int DestroyList(NODE *head){
 	NODE *tmp=(NODE *)mymalloc(sizeof(NODE));
 	while ( head != NULL )
 	{	
-		printf("free %d ",head->data);
+//		printf("myfree %d ",head->data);
 		memcpy((char *)tmp,(char *)head,sizeof(NODE));
-		free(head);
+		myfree(head);
 		head->next = NULL;
 		head = tmp->next;
 	}
-	printf("\n");
+	myfree(tmp);
+//	printf("\n");
 	return 0;
 }

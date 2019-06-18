@@ -7,17 +7,23 @@ int main(){
 	NODE *head;
 	ListNode(&node);
 	head = node;
-	node->data=2;
-	TaiInsertList(&head,3);
-	PreInsertList(&head,8);
-	PreInsertList(&head,9);
+	node->data=7;
+	PreInsertList(&head,6);
+	PreInsertList(&head,6);
+	PreInsertList(&head,6);
+	PreInsertList(&head,6);
+	PreInsertList(&head,6);
+	PreInsertList(&head,6);
+	PreInsertList(&head,6);
 	PreInsertList(&head,7);
 	ShowList(head);
 	SortList(&head);
 	ShowList(head);
-	
-	DestroyList(head);
+	DelListNode(&head,3);
+	printf("反转\n");
+	ReverseList(&head);	
 	ShowList(head);
+	DestroyList(head);
 	
 }
 
